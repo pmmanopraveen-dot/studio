@@ -8,6 +8,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
@@ -16,12 +17,8 @@ import {
   SidebarMenuButton,
   SidebarProvider
 } from "@/components/ui/sidebar";
-import { BookOpen, BarChart3, TestTubeDiagonal, LayoutDashboard, Database, KeyRound, FolderKanban } from 'lucide-react';
+import { BookOpen, BarChart3, TestTubeDiagonal, LayoutDashboard, Database } from 'lucide-react';
 import { Logo } from '@/components/logo';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
 
 export default function DashboardLayout({
   children,
@@ -30,9 +27,6 @@ export default function DashboardLayout({
 }) {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [isUnlocked, setIsUnlocked] = React.useState(false);
-  const [password, setPassword] = React.useState('');
-  const [error, setError] = React.useState('');
 
   React.useEffect(() => {
     if (!loading && !user) {
@@ -40,55 +34,8 @@ export default function DashboardLayout({
     }
   }, [user, loading, router]);
 
-  React.useEffect(() => {
-    if (typeof window !== 'undefined' && sessionStorage.getItem('isAppUnlocked') === 'true') {
-      setIsUnlocked(true);
-    }
-  }, []);
-
-  const handleUnlock = () => {
-    if (password === 'VKP@CTW') {
-      sessionStorage.setItem('isAppUnlocked', 'true');
-      setIsUnlocked(true);
-      setError('');
-    } else {
-      setError('Incorrect password. Please try again.');
-    }
-  };
-
   if (loading || !user) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>;
-  }
-
-  if (!isUnlocked) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4">
-        <Card className="w-full max-w-sm shadow-2xl">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-4">
-                <KeyRound className="h-12 w-12 text-primary" />
-            </div>
-            <CardTitle className="font-headline text-2xl">Enter Access Code</CardTitle>
-            <CardDescription>This application requires a password for full access.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-                <Input 
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
-                />
-                {error && <p className="text-sm font-medium text-destructive">{error}</p>}
-                <Button className="w-full" onClick={handleUnlock}>
-                    Unlock Features
-                </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
   }
 
   return (
