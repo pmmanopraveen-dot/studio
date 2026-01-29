@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import { researchAction } from './actions';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,34 +16,55 @@ const initialState = {
 };
 
 function SubmitButton() {
-    const [pending, setPending] = useState(false);
-    
-    // A simple way to track form submission status without useFormStatus for this setup
-    const handleClick = () => {
-        setPending(true);
-    }
-    
+    const { pending } = useFormStatus();
     return (
-      <Button type="submit" onClick={handleClick} disabled={pending} className="w-full">
+      <Button type="submit" disabled={pending} className="w-full">
         {pending ? "Analyzing..." : <>
             <Search className="mr-2 h-4 w-4" /> Analyze and Answer
         </>}
       </Button>
     );
-  }
+}
+
+function AnswerCard({ answer }: { answer: string }) {
+    const { pending } = useFormStatus();
+    return (
+        <Card className="md:col-span-1">
+            <CardHeader>
+                <CardTitle>Generated Answer</CardTitle>
+                <CardDescription>The AI's response based on the provided context.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                {pending ? (
+                    <div className="space-y-4">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-4/5" />
+                    </div>
+                ) : (
+                    answer ? (
+                        <Alert>
+                            <AlertTitle>Analysis Complete</AlertTitle>
+                            <AlertDescription className="prose dark:prose-invert">
+                                {answer}
+                            </AlertDescription>
+                        </Alert>
+                    ) : (
+                        <div className="text-center text-muted-foreground py-8">
+                            <p>Your answer will appear here.</p>
+                        </div>
+                    )
+                )}
+            </CardContent>
+        </Card>
+    );
+}
 
 export default function KnowledgeHubPage() {
     const [state, formAction] = useFormState(researchAction, initialState);
-    const [loading, setLoading] = useState(false);
-
-    const handleFormAction = async (formData: FormData) => {
-        setLoading(true);
-        await formAction(formData);
-        setLoading(false);
-    }
 
     return (
-        <div className="grid gap-8 md:grid-cols-2">
+        <form action={formAction} className="grid gap-8 md:grid-cols-2">
             <Card className="md:col-span-1">
                 <CardHeader>
                     <div className="flex items-center gap-4">
@@ -58,7 +78,7 @@ export default function KnowledgeHubPage() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <form action={handleFormAction} className="space-y-6">
+                    <div className="space-y-6">
                         <div className="space-y-2">
                             <Label htmlFor="query">Question</Label>
                             <Input id="query" name="query" placeholder="e.g., What is the scope of IS 801?" required />
@@ -77,38 +97,10 @@ export default function KnowledgeHubPage() {
                             </p>
                         </div>
                         <SubmitButton />
-                    </form>
+                    </div>
                 </CardContent>
             </Card>
-
-            <Card className="md:col-span-1">
-                <CardHeader>
-                    <CardTitle>Generated Answer</CardTitle>
-                    <CardDescription>The AI's response based on the provided context.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {loading ? (
-                        <div className="space-y-4">
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-4/5" />
-                        </div>
-                    ) : (
-                        state?.answer ? (
-                            <Alert>
-                                <AlertTitle>Analysis Complete</AlertTitle>
-                                <AlertDescription className="prose dark:prose-invert">
-                                    {state.answer}
-                                </AlertDescription>
-                            </Alert>
-                        ) : (
-                            <div className="text-center text-muted-foreground py-8">
-                                <p>Your answer will appear here.</p>
-                            </div>
-                        )
-                    )}
-                </CardContent>
-            </Card>
-        </div>
+            <AnswerCard answer={state.answer} />
+        </form>
     );
 }

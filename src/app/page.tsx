@@ -56,7 +56,7 @@ export default function Home() {
       </main>
       <footer className="border-t">
         <div className="container py-6 text-center text-muted-foreground">
-           © {new Date().getFullYear()} VKP-CFS. All Rights Reserved.
+           © 2024 VKP-CFS. All Rights Reserved.
         </div>
       </footer>
     </div>
