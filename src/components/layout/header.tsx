@@ -1,7 +1,6 @@
 "use client";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { UserNav } from "./user-nav";
 import { LanguageToggle } from "./language-toggle";
 
 export function Header() {
@@ -14,7 +13,6 @@ export function Header() {
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-2">
             <LanguageToggle />
-            <UserNav />
           </nav>
         </div>
       </div>

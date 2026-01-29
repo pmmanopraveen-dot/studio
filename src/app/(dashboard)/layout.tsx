@@ -1,8 +1,6 @@
 "use client";
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/auth-context';
 import { Header } from '@/components/layout/header';
 import {
   Sidebar,
@@ -25,18 +23,6 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useAuth();
-  const router = useRouter();
-
-  React.useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
-
-  if (loading || !user) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
-  }
 
   return (
     <SidebarProvider>

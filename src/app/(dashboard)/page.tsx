@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@/contexts/auth-context";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Database, TestTubeDiagonal, BarChart3, BookOpen } from "lucide-react";
 import Link from "next/link";
@@ -33,13 +32,11 @@ const features = [
 ];
 
 export default function DashboardPage() {
-  const { user } = useAuth();
-  
   return (
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline">
-          Welcome, {user?.displayName?.split(' ')[0] || 'Researcher'}!
+          Welcome, Researcher!
         </h1>
         <p className="text-muted-foreground">
           Here's a quick overview of your validation toolkit.

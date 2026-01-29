@@ -30,7 +30,7 @@ export default function Home() {
             </p>
             <div className="flex gap-4">
               <Button asChild size="lg">
-                <Link href="/login">
+                <Link href="/dashboard">
                   Get Started <ArrowRight className="ml-2" />
                 </Link>
               </Button>
