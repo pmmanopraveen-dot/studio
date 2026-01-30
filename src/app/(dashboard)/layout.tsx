@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/header';
 import {
   Sidebar,
@@ -17,12 +17,34 @@ import {
 } from "@/components/ui/sidebar";
 import { BookOpen, BarChart3, TestTubeDiagonal, LayoutDashboard, Database } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import PasswordGate from './password-gate';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const authenticated = sessionStorage.getItem('vkp-cfs-authenticated');
+    if (authenticated === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleSuccess = () => {
+    sessionStorage.setItem('vkp-cfs-authenticated', 'true');
+    setIsAuthenticated(true);
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <main className="flex-1 overflow-y-auto bg-background">
+          <PasswordGate onSuccess={handleSuccess} />
+      </main>
+    );
+  }
 
   return (
     <SidebarProvider>
