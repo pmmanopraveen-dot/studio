@@ -25,8 +25,10 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     const authenticated = sessionStorage.getItem('vkp-cfs-authenticated');
     if (authenticated === 'true') {
       setIsAuthenticated(true);
@@ -37,6 +39,10 @@ export default function DashboardLayout({
     sessionStorage.setItem('vkp-cfs-authenticated', 'true');
     setIsAuthenticated(true);
   };
+
+  if (!isClient) {
+    return null; // Or a loading spinner
+  }
 
   if (!isAuthenticated) {
     return (

@@ -11,13 +11,17 @@ const watermarkImages = [
 
 export function DynamicWatermark() {
   const [bgImage, setBgImage] = useState('');
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     const randomImage = watermarkImages[Math.floor(Math.random() * watermarkImages.length)];
     setBgImage(randomImage);
   }, []);
 
-  if (!bgImage) return null;
+  if (!isClient || !bgImage) {
+    return null;
+  }
 
   const style = `
     body::before {
